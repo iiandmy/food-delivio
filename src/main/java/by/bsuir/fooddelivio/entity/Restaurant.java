@@ -1,9 +1,6 @@
 package by.bsuir.fooddelivio.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,11 +9,12 @@ import java.util.List;
 @Table(name = "restaurants")
 @Getter
 @Setter
+@Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class Restaurant {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -24,5 +22,10 @@ public class Restaurant {
     private String workTime;
 
     @OneToMany
+    @JoinColumn(name = "id")
     private List<Menu> menus;
+
+    @OneToMany
+    @JoinColumn(name = "id")
+    private List<Review> reviews;
 }

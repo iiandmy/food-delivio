@@ -23,5 +23,6 @@ public class User {
     private String deliveryAddress;
 
     @OneToMany
+    @JoinColumn(name = "id")
     private List<Review> reviews;
 }

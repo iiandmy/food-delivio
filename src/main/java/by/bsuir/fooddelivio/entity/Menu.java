@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Menu {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -26,5 +26,6 @@ public class Menu {
     private Restaurant restaurant;
 
     @OneToMany
+    @JoinColumn(name = "id")
     private List<Dish> dishes;
 }
