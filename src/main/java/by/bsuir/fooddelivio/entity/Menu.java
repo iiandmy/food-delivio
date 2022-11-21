@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "menus")
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class Menu {
 
     private String name;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
 

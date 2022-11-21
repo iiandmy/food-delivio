@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.net.URL;
 
 @Entity
+@Table(name = "dishes")
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -24,6 +25,7 @@ public class Dish {
     private double price;
     private int calories;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "menu_id", nullable = false)
     private Menu menu;
 }

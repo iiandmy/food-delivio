@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "restaurants")
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -19,7 +20,7 @@ public class Restaurant {
     private Long id;
 
     private String name;
-    private String adress;
+    private String address;
     private String workTime;
 
     @OneToMany
