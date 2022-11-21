@@ -1,15 +1,13 @@
 package by.bsuir.fooddelivio.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
+@Builder
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -20,6 +18,9 @@ public class User {
     private Long id;
 
     private String name;
+    private String phoneNumber;
+    private String email;
+    private String password;
     private String deliveryAddress;
 
     @OneToMany
