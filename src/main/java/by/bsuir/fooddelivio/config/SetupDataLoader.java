@@ -30,6 +30,11 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
         Role adminRole = roleRepository.findRoleByName("ROLE_ADMIN").get();
         Role userRole = roleRepository.findRoleByName("ROLE_USER").get();
+        if (userRepository.findUserByEmail("admin@fooddelivio.by").isPresent()) {
+            alreadySetup = true;
+            return;
+        }
+
         User user = new User();
         user.setName("Admin");
         user.setEmail("admin@fooddelivio.by");
