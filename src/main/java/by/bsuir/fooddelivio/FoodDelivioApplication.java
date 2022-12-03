@@ -1,5 +1,7 @@
 package by.bsuir.fooddelivio;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +14,15 @@ public class FoodDelivioApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(FoodDelivioApplication.class, args);
+    }
+
+    @Bean
+    public Cloudinary setupCloudinary() {
+        return new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", "dytws5eom",
+                "api_key", "643751387367933",
+                "api_secret", "ikgOkBoShyqI9P5hjZ7F54zABUA"
+        ));
     }
 
     @Bean
