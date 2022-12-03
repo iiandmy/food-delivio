@@ -2,10 +2,12 @@ package by.bsuir.fooddelivio.controller;
 
 import by.bsuir.fooddelivio.config.JwtTokenUtil;
 import by.bsuir.fooddelivio.dto.RegisterUserDto;
+import by.bsuir.fooddelivio.dto.UserResponseDto;
 import by.bsuir.fooddelivio.dto.jwt.JwtRequest;
 import by.bsuir.fooddelivio.dto.jwt.JwtResponse;
 import by.bsuir.fooddelivio.entity.User;
 import by.bsuir.fooddelivio.exception.UserAlreadyExistsException;
+import by.bsuir.fooddelivio.mapper.UserMapper;
 import by.bsuir.fooddelivio.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +36,11 @@ public class JwtAuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody RegisterUserDto dto) throws UserAlreadyExistsException {
-        return ResponseEntity.ok(userService.createUser(dto));
+    public ResponseEntity<UserResponseDto> registerUser(@RequestBody RegisterUserDto dto) throws UserAlreadyExistsException {
+        userService.createUser(dto);
+        return ResponseEntity.ok(
+                UserMapper.userToResponseDto(userService.findUserByEmail(dto.getEmail()).get())
+        );
     }
 
     private void authenticate(String email, String password) throws Exception {
