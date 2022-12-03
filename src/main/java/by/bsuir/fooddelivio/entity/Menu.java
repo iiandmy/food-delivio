@@ -1,15 +1,13 @@
 package by.bsuir.fooddelivio.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "menus")
+@Builder
 @Getter
 @Setter
 @RequiredArgsConstructor
