@@ -1,15 +1,13 @@
 package by.bsuir.fooddelivio.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.net.URL;
 
 @Entity
 @Table(name = "dishes")
+@Builder
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -20,10 +18,10 @@ public class Dish {
     private Long id;
 
     private String name;
-    private URL image;
     private String description;
     private double price;
     private int calories;
+    private String imageUrl;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "menu_id", nullable = false)
