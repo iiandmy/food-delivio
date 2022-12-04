@@ -1,6 +1,7 @@
 package by.bsuir.fooddelivio.service;
 
 import by.bsuir.fooddelivio.dto.RestaurantDto;
+import by.bsuir.fooddelivio.entity.Menu;
 import by.bsuir.fooddelivio.entity.Restaurant;
 import by.bsuir.fooddelivio.entity.Review;
 import by.bsuir.fooddelivio.mapper.RestaurantMapper;
@@ -42,6 +43,11 @@ public class RestaurantService {
         restaurant.setImageUrl(url);
     }
 
+    public List<Menu> getRestaurantMenus(Long restaurantId) {
+        Restaurant restaurant = restaurantRepo.findById(restaurantId).get();
+        return restaurant.getMenus();
+    }
+
     public Restaurant getRestaurantByName(String name) {
         Optional<Restaurant> restaurant = restaurantRepo.findByName(name);
         if (restaurant.isEmpty()) {
@@ -61,10 +67,10 @@ public class RestaurantService {
 
     public double getRatingForRestaurant(Long restaurantId) {
         Restaurant restaurant = restaurantRepo.findById(restaurantId).get();
-        return restaurant.getReviews()
+        List<Double> marks = restaurant.getReviews()
                 .stream()
-                .mapToDouble(Review::getReviewMark)
-                .reduce(0.0, (mark1, mark2) -> (mark1 + mark2) / 2);
+                .mapToDouble(Review::getReviewMark).boxed().toList();
+        return marks.stream().reduce(0.0, Double::sum) / marks.size();
     }
 
     public List<Restaurant> getTop5Restaurants() {

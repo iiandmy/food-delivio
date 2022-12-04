@@ -2,7 +2,9 @@ package by.bsuir.fooddelivio.controller;
 
 import by.bsuir.fooddelivio.dto.RestaurantDto;
 import by.bsuir.fooddelivio.dto.RestaurantResponseDto;
+import by.bsuir.fooddelivio.dto.menu.MenuResponseDto;
 import by.bsuir.fooddelivio.entity.Restaurant;
+import by.bsuir.fooddelivio.mapper.MenuMapper;
 import by.bsuir.fooddelivio.mapper.RestaurantMapper;
 import by.bsuir.fooddelivio.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,14 @@ public class RestaurantController {
                 .stream().map(RestaurantMapper::restaurantToResponseDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/get_restaurant_menus/{restaurantId}")
+    public ResponseEntity<List<MenuResponseDto>> getRestaurantMenus(@PathVariable("restaurantId") Long restaurantId) {
+        return ResponseEntity.ok(
+                restaurantService.getRestaurantMenus(restaurantId).stream()
+                        .map(MenuMapper::menuEntityToDto).collect(Collectors.toList())
+        );
     }
 
     @PostMapping("/admin/add_restaurant")
