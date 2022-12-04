@@ -26,9 +26,11 @@ public class User implements UserDetails {
     private String password;
     private String deliveryAddress;
 
-    @OneToMany
-    @JoinColumn(name = "id")
+    @OneToMany(mappedBy = "author")
     private List<Review> reviews;
+
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(

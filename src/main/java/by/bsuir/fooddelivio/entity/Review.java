@@ -1,14 +1,12 @@
 package by.bsuir.fooddelivio.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "reviews")
+@Builder
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -20,6 +18,11 @@ public class Review {
 
     private String reviewText;
     private double reviewMark;
+    private String reviewDate;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    private Order order;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)

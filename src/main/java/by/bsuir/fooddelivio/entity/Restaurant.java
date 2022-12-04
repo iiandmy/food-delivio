@@ -22,11 +22,9 @@ public class Restaurant {
     private String workTime;
     private String imageUrl;
 
-    @OneToMany
-    @JoinColumn(name = "id")
+    @OneToMany(mappedBy = "restaurant")
     private List<Menu> menus;
 
-    @OneToMany
-    @JoinColumn(name = "id")
+    @OneToMany(mappedBy = "refersTo")
     private List<Review> reviews;
 }
