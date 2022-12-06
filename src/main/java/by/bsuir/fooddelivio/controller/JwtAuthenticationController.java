@@ -17,6 +17,8 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
@@ -35,11 +37,31 @@ public class JwtAuthenticationController {
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
+    @GetMapping("/authorized/is_admin")
+    public ResponseEntity<Boolean> isAdmin(HttpServletRequest request) {
+        User user = getUserFromToken(request);
+        return ResponseEntity.ok(user.getRoles().stream().anyMatch((role) -> role.getName().equals("ROLE_ADMIN")));
+    }
+
     @PostMapping("/register")
     public ResponseEntity<UserResponseDto> registerUser(@RequestBody RegisterUserDto dto) throws UserAlreadyExistsException {
         userService.createUser(dto);
         return ResponseEntity.ok(
                 UserMapper.userToResponseDto(userService.findUserByEmail(dto.getEmail()).get())
+        );
+    }
+
+    @GetMapping("/authorized/get_user")
+    public ResponseEntity<UserResponseDto> getUser(HttpServletRequest request) {
+        return ResponseEntity.ok(
+                UserMapper.userToResponseDto(getUserFromToken(request))
+        );
+    }
+
+    @GetMapping("/authorized/is_token_expired")
+    public ResponseEntity<Boolean> isTokenExpired(HttpServletRequest request) {
+        return ResponseEntity.ok(
+                checkIfTokenExpired(request)
         );
     }
 
@@ -51,6 +73,25 @@ public class JwtAuthenticationController {
         } catch (BadCredentialsException exception) {
             throw new Exception("INVALID_CREDENTIALS", exception);
         }
+    }
+
+    private User getUserFromToken(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer")) {
+            String token = authorizationHeader.substring(7);
+            String email = jwtTokenUtil.getUserNameFromToken(token);
+            return userService.findUserByEmail(email).get();
+        }
+        throw new RuntimeException();
+    }
+
+    private Boolean checkIfTokenExpired(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer")) {
+            String token = authorizationHeader.substring(7);
+            return jwtTokenUtil.isTokenExpired(token);
+        }
+        throw new RuntimeException();
     }
 
 }
