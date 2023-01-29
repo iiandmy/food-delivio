@@ -15,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,13 +29,25 @@ public class JwtAuthenticationController {
     private final UserService userService;
 
     @PostMapping("/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest request) throws Exception {
+    public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody JwtRequest request) throws Exception {
         authenticate(request.getEmail(), request.getPassword());
+        UserDetails user = userService.loadUserByUsername(request.getEmail());
 
-        String token = jwtTokenUtil.generateToken(
-            userService.loadUserByUsername(request.getEmail())
-        );
-        return ResponseEntity.ok(new JwtResponse(token));
+        String accessToken = jwtTokenUtil.generateAccessToken(user);
+        String refreshToken = jwtTokenUtil.generateRefreshToken(user);
+        return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken));
+    }
+
+    @PostMapping("/authorized/refresh")
+    public ResponseEntity<JwtResponse> refreshTokens(HttpServletRequest request) throws Exception {
+        User user = getUserFromToken(request);
+        authenticate(user.getEmail(), user.getPassword());
+
+        UserDetails userDetails = userService.loadUserByUsername(user.getEmail());
+
+        String accessToken = jwtTokenUtil.generateAccessToken(userDetails);
+        String refreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
+        return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken));
     }
 
     @GetMapping("/authorized/is_admin")
